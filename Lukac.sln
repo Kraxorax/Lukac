@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lukac.Plugins", "Lukac.Plugins.csproj", "{6AAEA23A-07D5-F4DF-025C-D7A24B77FEDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lukac", "Lukac.csproj", "{DEBDEA64-77BA-96E2-4D81-9B7E87208554}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lukac.Editor.Plugins", "Lukac.Editor.Plugins.csproj", "{A3B70B3B-87A3-1B27-7161-6138349E5DAF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6AAEA23A-07D5-F4DF-025C-D7A24B77FEDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AAEA23A-07D5-F4DF-025C-D7A24B77FEDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AAEA23A-07D5-F4DF-025C-D7A24B77FEDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AAEA23A-07D5-F4DF-025C-D7A24B77FEDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEBDEA64-77BA-96E2-4D81-9B7E87208554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEBDEA64-77BA-96E2-4D81-9B7E87208554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEBDEA64-77BA-96E2-4D81-9B7E87208554}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEBDEA64-77BA-96E2-4D81-9B7E87208554}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3B70B3B-87A3-1B27-7161-6138349E5DAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3B70B3B-87A3-1B27-7161-6138349E5DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3B70B3B-87A3-1B27-7161-6138349E5DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3B70B3B-87A3-1B27-7161-6138349E5DAF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
