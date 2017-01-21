@@ -93,7 +93,7 @@ namespace Completed
 			food = (int)f.magnitude;
 			Vector3 f3 = new Vector3(f.x, f.y, 0);
 			transform.position += f3 / 100;
-			transform.Rotate(f3/30);
+			//transform.Rotate(f3/30);
 
 			
 
@@ -118,9 +118,13 @@ namespace Completed
 
 			transform.position -= new Vector3 (odBroda.normalized.x / 50, odBroda.normalized.y / 50, 0);
 
-			transform.Rotate(Vector3.back, dest * posOrNeg);
+			transform.Rotate(f3/30);
 
-		
+			var tp = new Vector3(transform.position.x, transform.position.y, 0);
+			var lookPos = new Vector3(dot.x, dot.y, 0) - tp;
+			lookPos.z = 0;
+			var rotation = Quaternion.LookRotation(odBroda);
+			transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 1);
 
 		}	
 
