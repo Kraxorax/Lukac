@@ -54,7 +54,6 @@ public class Wawe : MonoBehaviour {
 		Vector2 res = StrongDirection - on;
 		float norm = res.magnitude / 2;
 
-		//Debug.Log(norm);
 		float alfa = (norm);
 
 		_srend.color = new Color(_srend.color.r, _srend.color.g, _srend.color.b, alfa);

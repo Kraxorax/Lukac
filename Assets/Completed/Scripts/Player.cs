@@ -48,13 +48,6 @@ namespace Completed
 		}
 		
 		
-		//This function is called when the behaviour becomes disabled or inactive.
-		private void OnDisable ()
-		{
-			//When Player object is disabled, store the current local food total in the GameManager so it can be re-loaded in next level.
-			GameManager.instance.playerFoodPoints = food;
-		}
-		
 		Vector2 getForce()
 		{
 			BackgroundParallax bp = FindObjectOfType<BackgroundParallax>();
@@ -70,7 +63,7 @@ namespace Completed
 				fv += w.getVector();
 			}
 			
-			return fv;
+			return fv.normalized;
 		}
 
 		void OnCollisionEnter(Collision coll)
@@ -97,14 +90,45 @@ namespace Completed
 		private void Update ()
 		{
 			Vector2 f = getForce();
-			food = (int) f.magnitude;
+			food = (int)f.magnitude;
 			Vector3 f3 = new Vector3(f.x, f.y, 0);
 			transform.position += f3 / 100;
-
 			transform.Rotate(f3/30);
 
+			
 
-		}
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition); 
+			Vector2 dot = new Vector2(ray.origin.x, ray.origin.y);
+
+			Vector2 odBroda = new Vector2(transform.position.x, transform.position.y) - dot;
+
+			
+
+
+			Vector2 anch = new Vector2(transform.rotation.x, transform.rotation.y); 
+			float dest = Vector2.Angle(odBroda.normalized, transform.forward) * Time.deltaTime;
+
+			float a1 = Vector2.Angle(Vector2.left, odBroda.normalized);
+			float a2 = Vector2.Angle(Vector2.left, transform.forward.normalized);
+
+			Vector2 kaM = new Vector2(transform.forward.normalized.x, transform.forward.normalized.y) - odBroda.normalized;
+
+			Debug.Log("aa " + a1 + " " + a2);
+			float basemovement = a1 > a2 ? -1 : 1;
+
+			dest = dest * basemovement;
+			Vector2 distc = dot - anch;
+			//if (Mathf.Abs(dest) > 10.0f) 
+			//	transform.RotateAroundLocal (Vector3.forward, 1.2f * basemovement * Mathf.Deg2Rad);
+
+			transform.position -= new Vector3 (odBroda.normalized.x / 50, odBroda.normalized.y / 50, 0);
+
+			Debug.Log(dest);
+			transform.Rotate(Vector3.up, kaM.magnitude * basemovement);
+
+		
+
+		}	
 		
 		//AttemptMove overrides the AttemptMove function in the base class MovingObject
 		//AttemptMove takes a generic parameter T which for Player will be of the type Wall, it also takes integers for x and y direction to move in.
