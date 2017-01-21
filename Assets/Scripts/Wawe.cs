@@ -9,6 +9,9 @@ public class Wawe : MonoBehaviour {
 	public float MCircleRotateSpeed = 5f;
 	private Vector2 _centre;
 	private float _angle;
+	private Vector2 _offset;
+
+	public Vector2 StrongDirection = new Vector2(0, 0);
 
 	public float MRotateSpeed = 1f;
 	public int MRotateLimit = 30;
@@ -22,12 +25,18 @@ public class Wawe : MonoBehaviour {
 		_centre = transform.position;
 		_srend = gameObject.GetComponent<SpriteRenderer>();
 	}
+
+	
+	public Vector2 getVector()
+	{
+		return _offset;
+	}
 	
 	// Update is called once per frame
 	void Update () {
 		_angle += MCircleRotateSpeed * Time.deltaTime;
-		var offset = new Vector2(Mathf.Sin(_angle), Mathf.Cos(_angle)) * MCircleRadius;
-		transform.position = _centre + offset;
+		_offset = new Vector2(Mathf.Sin(_angle), Mathf.Cos(_angle)) * MCircleRadius;
+		transform.position = _centre + _offset;
 
 
 		_rotation = MRotateSpeed * Time.deltaTime;
@@ -36,10 +45,16 @@ public class Wawe : MonoBehaviour {
 				? _rotation
 				: -_rotation;
 
-		transform.Rotate(0, 0, (transform.rotation.z + _rotation));
+		//transform.Rotate(0, 0, (transform.rotation.z + _rotation));
 
 
-		float alfa = Mathf.Max(0.3f, Mathf.Sin(Mathf.Deg2Rad * transform.rotation.z) );
+		Vector2 on = new Vector2(_offset.x, _offset.y);
+		on.Normalize();
+		Vector2 res = StrongDirection - on;
+		float norm = res.magnitude / 2;
+
+		Debug.Log(norm);
+		float alfa = (norm);
 
 		_srend.color = new Color(_srend.color.r, _srend.color.g, _srend.color.b, alfa);
 	}
