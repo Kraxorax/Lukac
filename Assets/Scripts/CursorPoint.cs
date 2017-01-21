@@ -11,5 +11,5 @@ public class CursorPoint : MonoBehaviour
 
 		if (Physics.Raycast(ray))
 			Instantiate(particle, ray.GetPoint(0), transform.rotation);
-}
+	}
 }
