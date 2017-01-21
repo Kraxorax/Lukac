@@ -56,7 +56,7 @@ namespace Completed
 
 			Wawe[] ws = FindObjectsOfType<Wawe>();
 
-			Debug.Log("wawes below " + wawesBelow.Count);
+//			Debug.Log("wawes below " + wawesBelow.Count);
 
 			foreach (Wawe w in wawesBelow)
 			{
@@ -68,14 +68,14 @@ namespace Completed
 
 		void OnCollisionEnter(Collision coll)
 		{
-			Debug.Log("COLL EEE " + coll.ToString());
+//			Debug.Log("COLL EEE " + coll.ToString());
 
 			wawesBelow.Add(coll.gameObject.GetComponent<Wawe>());
 		}
 
 		void OnCollisionExit(Collision coll)
 		{
-			Debug.Log("COLL EX " + coll.ToString());
+//			Debug.Log("COLL EX " + coll.ToString());
 
 			wawesBelow.Remove(coll.gameObject.GetComponent<Wawe>());
 		}
@@ -113,23 +113,20 @@ namespace Completed
 
 			Vector2 kaM = new Vector2(transform.forward.normalized.x, transform.forward.normalized.y) - odBroda.normalized;
 
-			Debug.Log("aa " + a1 + " " + a2);
-			float basemovement = a1 > a2 ? -1 : 1;
+			float posOrNeg = isLeft (transform.position, transform.forward, odBroda) ? 1 : -1 ;
 
-			dest = dest * basemovement;
-			Vector2 distc = dot - anch;
-			//if (Mathf.Abs(dest) > 10.0f) 
-			//	transform.RotateAroundLocal (Vector3.forward, 1.2f * basemovement * Mathf.Deg2Rad);
 
 			transform.position -= new Vector3 (odBroda.normalized.x / 50, odBroda.normalized.y / 50, 0);
 
-			Debug.Log(dest);
-			transform.Rotate(Vector3.up, kaM.magnitude * basemovement);
+			transform.Rotate(Vector3.back, dest * posOrNeg);
 
 		
 
 		}	
-		
+
+		public bool isLeft(Vector2 a, Vector2 b, Vector2 c){
+			return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
+		}
 		//AttemptMove overrides the AttemptMove function in the base class MovingObject
 		//AttemptMove takes a generic parameter T which for Player will be of the type Wall, it also takes integers for x and y direction to move in.
 		//protected override void AttemptMove <T> (int xDir, int yDir)
