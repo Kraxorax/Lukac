@@ -32,6 +32,7 @@ namespace Completed
 		{
 			//Get a component reference to the Player's animator component
 			animator = GetComponent<Animator>();
+			rb = GetComponent<Rigidbody>();
 
 			wawesBelow = new ArrayList();
 
@@ -102,27 +103,41 @@ namespace Completed
 
 			Vector2 odBroda = new Vector2(transform.position.x, transform.position.y) - dot;
 
-			
-
-
 			Vector2 anch = new Vector2(transform.rotation.x, transform.rotation.y); 
-			float dest = Vector2.Angle(odBroda.normalized, transform.forward) * Time.deltaTime;
+			float dest = Vector2.Angle(transform.up.normalized, odBroda.normalized);
 
-			float a1 = Vector2.Angle(Vector2.left, odBroda.normalized);
-			float a2 = Vector2.Angle(Vector2.left, transform.forward.normalized);
+//			float a1 = Vector2.Angle(Vector2.left, odBroda.normalized);
+//			float a2 = Vector2.Angle(Vector2.left, transform.forward.normalized);
 
-			Vector2 kaM = new Vector2(transform.forward.normalized.x, transform.forward.normalized.y) - odBroda.normalized;
+			Vector2 kaM = new Vector2(transform.up.normalized.x, transform.up.normalized.y) - odBroda.normalized;
 
-			float posOrNeg = isLeft (transform.position, transform.forward, odBroda) ? 1 : -1 ;
-
+			float posOrNeg = isLeft (transform.position, transform.up, odBroda) ? -1 : 1 ;
 
 			transform.position -= new Vector3 (odBroda.normalized.x / 50, odBroda.normalized.y / 50, 0);
+			Debug.Log ("dest " + dest);
+			if (dest < 10.0f) { 
+				Debug.Log ("To je mali ugao"); 
+			} else if (dest > 170.0f) {
+				Debug.Log ("OVo je preveliki ugao"); 
 
-			transform.Rotate(Vector3.back, dest * posOrNeg);
+			} else {
+				float smooth = 2.0f;
+				Vector3 eu = transform.rotation.eulerAngles;
+				Quaternion target = Quaternion.Euler (eu.x, 0, eu.z + 30 * posOrNeg); 
+				transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * smooth);
+			
+			}
 
+//			transform.LookAt (new Vector3(odBroda.x, odBroda.y, transform.position.z) + transform.position);
 		
-
 		}	
+		public Vector3 eulerAngleVelocity;
+		public Rigidbody rb;
+
+		public float angleOfAngle(float ang) {
+			return ang;
+
+		}
 
 		public bool isLeft(Vector2 a, Vector2 b, Vector2 c){
 			return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
