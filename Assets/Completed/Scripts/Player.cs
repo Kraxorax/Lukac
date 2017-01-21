@@ -22,14 +22,18 @@ namespace Completed
 		
 		private Animator animator;					//Used to store a reference to the Player's animator component.
 		private int food;							//Used to store player food points total during level.
-		private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
-		
+		private Vector2 touchOrigin = -Vector2.one; //Used to store location of screen touch origin for mobile controls.
+
+
+		private ArrayList wawesBelow;
 		
 		//Start overrides the Start function of MovingObject
 		protected override void Start ()
 		{
 			//Get a component reference to the Player's animator component
 			animator = GetComponent<Animator>();
+
+			wawesBelow = new ArrayList();
 
 
 			//Get the current food point total stored in GameManager.instance between levels.
@@ -59,15 +63,37 @@ namespace Completed
 
 			Wawe[] ws = FindObjectsOfType<Wawe>();
 
-			for (int i = 0; i < ws.Length; i++)
+			Debug.Log("wawes below " + wawesBelow.Count);
+
+			foreach (Wawe w in wawesBelow)
 			{
-				Wawe w = ws[i];
 				fv += w.getVector();
 			}
 			
 			return fv;
 		}
-		
+
+		void OnCollisionEnter(Collision coll)
+		{
+			Debug.Log("COLL EEE " + coll.ToString());
+
+			wawesBelow.Add(coll.gameObject.GetComponent<Wawe>());
+		}
+
+		void OnCollisionExit(Collision coll)
+		{
+			Debug.Log("COLL EX " + coll.ToString());
+
+			wawesBelow.Remove(coll.gameObject.GetComponent<Wawe>());
+		}
+
+		void OnCollisionStay(Collision coll)
+		{
+			//Debug.Log("COLL SSS " + coll.ToString());
+			//transform.position += coll.other.gameObject
+		}
+
+
 		private void Update ()
 		{
 			Vector2 f = getForce();
@@ -76,6 +102,8 @@ namespace Completed
 			transform.position += f3 / 100;
 
 			transform.Rotate(f3/30);
+
+
 		}
 		
 		//AttemptMove overrides the AttemptMove function in the base class MovingObject

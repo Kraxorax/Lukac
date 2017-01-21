@@ -69,18 +69,18 @@ namespace Completed
 			doingSetup = true;
 			
 			//Get a reference to our image LevelImage by finding it by name.
-			levelImage = GameObject.Find("LevelImage");
+			//levelImage = GameObject.Find("LevelImage");
 			
-			//Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
-			levelText = GameObject.Find("LevelText").GetComponent<Text>();
+			////Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
+			//levelText = GameObject.Find("LevelText").GetComponent<Text>();
 			
 			//Set the text of levelText to the string "Day" and append the current level number.
-			levelText.text = "Day " + level;
+			//levelText.text = "Day " + level;
 			
-			//Set levelImage to active blocking player's view of the game board during setup.
-			levelImage.SetActive(true);
+			////Set levelImage to active blocking player's view of the game board during setup.
+			//levelImage.SetActive(true);
 			
-			//Call the HideLevelImage function with a delay in seconds of levelStartDelay.
+			////Call the HideLevelImage function with a delay in seconds of levelStartDelay.
 			Invoke("HideLevelImage", levelStartDelay);
 			
 			//Clear any Enemy objects in our List to prepare for next level.
@@ -96,7 +96,7 @@ namespace Completed
 		void HideLevelImage()
 		{
 			//Disable the levelImage gameObject.
-			levelImage.SetActive(false);
+			//levelImage.SetActive(false);
 			
 			//Set doingSetup to false allowing player to move again.
 			doingSetup = false;

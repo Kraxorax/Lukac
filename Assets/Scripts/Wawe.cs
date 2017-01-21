@@ -47,13 +47,14 @@ public class Wawe : MonoBehaviour {
 
 		//transform.Rotate(0, 0, (transform.rotation.z + _rotation));
 
+		//rigidbody.
 
 		Vector2 on = new Vector2(_offset.x, _offset.y);
 		on.Normalize();
 		Vector2 res = StrongDirection - on;
 		float norm = res.magnitude / 2;
 
-		Debug.Log(norm);
+		//Debug.Log(norm);
 		float alfa = (norm);
 
 		_srend.color = new Color(_srend.color.r, _srend.color.g, _srend.color.b, alfa);
