@@ -59,6 +59,11 @@ namespace Completed
 			{
 				level = index;
 			}
+			if (level == 1) {
+				Camera.main.GetComponents<AudioSource> () [2].Play ();
+			} else {
+				Camera.main.GetComponents<AudioSource> () [3].Play ();
+			}
 			Debug.Log ("NEXT LEVEL" + index);
 		}
 
