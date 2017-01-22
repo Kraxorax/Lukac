@@ -119,10 +119,11 @@ namespace Completed
 			Vector3 newpos = transform.position + mgola; 
 			transform.position = Vector3.Slerp (transform.position, newpos, 1);
 			float smooth = 2.0f;
-			if (dest < 7.0f) {
-				//				Debug.Log ("To je mali ugao"); 
-			} else if (dest > 170.0f) {
-				//				Debug.Log ("OVo je preveliki ugao"); 
+			Debug.Log("dest " + dest);
+			Debug.Log("forw " + transform.rotation.eulerAngles);
+			float diff = Mathf.Abs(dest - transform.rotation.eulerAngles.z);
+			Debug.Log("diff " + diff);
+			if (diff < 20.0f) {
 			} else {
 				rotateShip (odBroda.x < 0);
 			};
@@ -130,10 +131,10 @@ namespace Completed
 
 		public	float slow = 10.0f;
 		void rotateShip(bool left) {
-				float smooth = 2.0f;
-				Vector3 eu = transform.rotation.eulerAngles;
-			Quaternion target = Quaternion.Euler (eu.x, 0, eu.z + 10 * (left ? 1 : -1) ); 
-				transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * smooth);
+			float smooth = 2.0f;
+			Vector3 eu = transform.rotation.eulerAngles;
+			Quaternion target = Quaternion.Euler (eu.x, 0, eu.z + 30 * (left ? 1 : -1) ); 
+			transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * smooth);
 		}
 		public Vector3 eulerAngleVelocity;
 		public Rigidbody rb;
