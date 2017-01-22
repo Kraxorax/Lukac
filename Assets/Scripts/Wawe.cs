@@ -27,6 +27,8 @@ public class Wawe : MonoBehaviour {
 
 		float n = Random.Range(1, 101);
 		n = n / 100;
+		MCircleRotateSpeed = MCircleRotateSpeed * n;
+		MCircleRadius = MCircleRadius * 1 - n;
 		StrongDirection = new Vector2(n, 1 - n);
 	}
 
