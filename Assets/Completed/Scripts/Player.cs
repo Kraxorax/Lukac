@@ -62,15 +62,20 @@ namespace Completed
 		Vector3 imp;
 		void OnCollisionEnter(Collision coll)
 		{
-			colided = true; 
-			imp = coll.impulse;
-			wawesBelow.Add(coll.gameObject.GetComponent<Wawe>());
+			if (coll.gameObject.tag == "zem") {
+				colided = true; 
+			} else { 
+				wawesBelow.Add (coll.gameObject.GetComponent<Wawe> ());
+			}
 		}
 
 		void OnCollisionExit(Collision coll)
 		{
-			colided = false;
-			wawesBelow.Remove(coll.gameObject.GetComponent<Wawe>());
+			if (coll.gameObject.tag == "zem") {
+				colided = false;
+			} else { 
+				wawesBelow.Remove (coll.gameObject.GetComponent<Wawe> ());
+			}
 		}
 
 		void OnCollisionStay(Collision coll)
@@ -83,10 +88,9 @@ namespace Completed
 		private void Update ()
 		{
 			Vector2 f = getForce();
-			food = (int)f.magnitude;
 			Vector3 f3 = new Vector3(f.x, f.y, 0);
 			transform.position += f3 / 100;
-			//transform.Rotate(f3/30);
+			transform.Rotate(f3/30);
 
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition); 
 			Vector2 dot = new Vector2(ray.origin.x, ray.origin.y);
@@ -95,25 +99,35 @@ namespace Completed
 
 			Vector2 anch = new Vector2(transform.rotation.x, transform.rotation.y);
 
-			float dest = Vector2.Angle(transform.up.normalized, odBroda.normalized);
+			float dest = Vector2.Angle(Vector2.up, odBroda.normalized);
+
+			Vector3 mgola = new Vector3 (odBroda.normalized.x / slow, odBroda.normalized.y / slow, 0);
 
 
-			transform.position += new Vector3 (odBroda.normalized.x / 10, odBroda.normalized.y / 10, 0);
+			if (colided) {
+				mgola *= -2;
+			}
 
+
+			Vector3 newpos = transform.position + mgola; 
+			transform.position = Vector3.Slerp (transform.position, newpos, 1);
+			float smooth = 2.0f;
 			if (dest < 7.0f) {
 				//				Debug.Log ("To je mali ugao"); 
 			} else if (dest > 170.0f) {
 				//				Debug.Log ("OVo je preveliki ugao"); 
 			} else {
-				float smooth = 2.0f;
-				Vector3 eu = transform.rotation.eulerAngles;
-				Debug.Log (eu.z);
-				Quaternion target = Quaternion.Euler (eu.x, 0, eu.z + 10 * -1 ); 
-//				Debug.Log (target.eulerAngles.z);
-				transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * smooth);
+				rotateShip (odBroda.x < 0);
 			};
 		}
 
+		public	float slow = 10.0f;
+		void rotateShip(bool left) {
+				float smooth = 2.0f;
+				Vector3 eu = transform.rotation.eulerAngles;
+			Quaternion target = Quaternion.Euler (eu.x, 0, eu.z + 10 * (left ? 1 : -1) ); 
+				transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * smooth);
+		}
 		public Vector3 eulerAngleVelocity;
 		public Rigidbody rb;
 
