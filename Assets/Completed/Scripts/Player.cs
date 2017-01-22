@@ -58,17 +58,18 @@ namespace Completed
 			return fv.normalized;
 		}
 
+		bool colided  = false; 
+		Vector3 imp;
 		void OnCollisionEnter(Collision coll)
 		{
-//			Debug.Log("COLL EEE " + coll.ToString());
-
+			colided = true; 
+			imp = coll.impulse;
 			wawesBelow.Add(coll.gameObject.GetComponent<Wawe>());
 		}
 
 		void OnCollisionExit(Collision coll)
 		{
-//			Debug.Log("COLL EX " + coll.ToString());
-
+			colided = false;
 			wawesBelow.Remove(coll.gameObject.GetComponent<Wawe>());
 		}
 
@@ -96,40 +97,25 @@ namespace Completed
 
 			float dest = Vector2.Angle(transform.up.normalized, odBroda.normalized);
 
-			Vector2 kaM = new Vector2(transform.up.normalized.x, transform.up.normalized.y) - odBroda.normalized;
-
-			bool lor = isLeft (transform.position, transform.up, odBroda);
 
 			transform.position += new Vector3 (odBroda.normalized.x / 50, odBroda.normalized.y / 50, 0);
-			//			Debug.Log ("dest " + dest);
-			if (dest < 10.0f) {
+
+			if (dest < 7.0f) {
 				//				Debug.Log ("To je mali ugao"); 
 			} else if (dest > 170.0f) {
 				//				Debug.Log ("OVo je preveliki ugao"); 
 			} else {
-				float posOrNeg = 1;
-				if (lor && dest > 89.9f) { 
-					Debug.Log ("to the left, to the left");
-					posOrNeg = -1;
-				} else {
-//					Debug.Log ("dont be so lazy");
-				}
 				float smooth = 2.0f;
 				Vector3 eu = transform.rotation.eulerAngles;
-//				Debug.Log (transform.up);
-				Quaternion target = Quaternion.Euler (eu.x, 0, eu.z + 20 * posOrNeg); 
+				Debug.Log (eu.z);
+				Quaternion target = Quaternion.Euler (eu.x, 0, eu.z + 10 * -1 ); 
+//				Debug.Log (target.eulerAngles.z);
 				transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * smooth);
 			};
-//			transform.LookAt (new Vector3(odBroda.x, odBroda.y, transform.position.z) + transform.position);
 		}
 
 		public Vector3 eulerAngleVelocity;
 		public Rigidbody rb;
-
-		public float angleOfAngle(float ang) {
-			return ang;
-
-		}
 
 		public bool isLeft(Vector2 a, Vector2 b, Vector2 c){
 			return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
