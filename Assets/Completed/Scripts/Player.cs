@@ -10,11 +10,15 @@ namespace Completed
 		public float restartLevelDelay = 1f;		//Delay time in seconds to restart level.
 		public int pointsPerFood = 10;				//Number of points to add to player food points when picking up a food object.
 		public int pointsPerSoda = 20;				//Number of points to add to player food points when picking up a soda object.
-		public int wallDamage = 1;					//How much damage a player does to a wall when chopping it.
+		public int wallDamage = 1;                  //How much damage a player does to a wall when chopping it.
+		public int health = 10;
 		public Text foodText;						//UI Text to display current player food total.
 		private Animator animator;					//Used to store a reference to the Player's animator component.
 		private int food;							//Used to store player food points total during level.
 		private Vector2 touchOrigin = -Vector2.one; //Used to store location of screen touch origin for mobile controls.
+
+		private bool imaLukac = false;
+		private bool stigo = false;
 
 
 		private ArrayList wawesBelow;
@@ -66,10 +70,10 @@ namespace Completed
 			if (tag == "zem") {
 				colided = true; 
 				imp = coll.impulse.magnitude;
+				health--;
 			} else if (coll.gameObject.GetComponent<levelident>()) { 
-				int lvl = coll.gameObject.GetComponent<levelident> ().level;
-				GameManager.instance.SetLevel (lvl);
-
+				int newLvl = coll.gameObject.GetComponent<levelident> ().level;
+				GameManager.instance.SetLevel (newLvl);
 			} else { 
 				wawesBelow.Add (coll.gameObject.GetComponent<Wawe> ());
 			}
@@ -93,6 +97,8 @@ namespace Completed
 
 		private void Update ()
 		{
+			CheckIfGameOver();
+
 			Vector2 f = getForce();
 			Vector3 f3 = new Vector3(f.x, f.y, 0);
 
@@ -119,10 +125,10 @@ namespace Completed
 			Vector3 newpos = transform.position + mgola; 
 			transform.position = Vector3.Slerp (transform.position, newpos, 1);
 			float smooth = 2.0f;
-			Debug.Log("dest " + dest);
-			Debug.Log("forw " + transform.rotation.eulerAngles);
+			//Debug.Log("dest " + dest);
+			//Debug.Log("forw " + transform.rotation.eulerAngles);
 			float diff = Mathf.Abs(dest - transform.rotation.eulerAngles.z);
-			Debug.Log("diff " + diff);
+			//Debug.Log("diff " + diff);
 			if (diff < 20.0f) {
 			} else {
 				rotateShip (odBroda.x < 0);
@@ -224,16 +230,23 @@ namespace Completed
 		private void CheckIfGameOver ()
 		{
 			//Check if food point total is less than or equal to zero.
-			if (food <= 0) 
+			if (health <= 0) 
 			{
-				//Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
-//				SoundManager.instance.PlaySingle (gameOverSound);
-//				
-//				//Stop the background music.
-//				SoundManager.instance.musicSource.Stop();
-//				
-//				//Call the GameOver function of GameManager.
-//				GameManager.instance.GameOver ();
+				int lvl = GameManager.instance.GetLevel();
+
+				if (lvl == 0)
+				{
+					transform.position = new Vector3(0, 0, 0);
+					health = 10;
+				}
+				else if (lvl == 1)
+				{
+					var lukac = GameObject.FindGameObjectWithTag("Food");
+					transform.position = lukac.transform.position;
+					health = 10;
+				}
+				//Call the GameOver function of GameManager.
+				GameManager.instance.GameOver();
 			}
 		}
 	}

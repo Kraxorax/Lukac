@@ -25,9 +25,9 @@ public class Wawe : MonoBehaviour {
 		_centre = transform.position;
 		_srend = gameObject.GetComponent<SpriteRenderer>();
 
-		float n = Random.Range(1, 101);
-		n = n / 100;
-		MCircleRotateSpeed = MCircleRotateSpeed * n;
+		float next = Random.Range(1, 101);
+		float n = next / 100;
+		MCircleRotateSpeed = MCircleRotateSpeed * (n * next * 0.1f);
 		MCircleRadius = MCircleRadius * 1 - n;
 		StrongDirection = new Vector2(n, 1 - n);
 	}
