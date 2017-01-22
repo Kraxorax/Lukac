@@ -20,23 +20,24 @@ namespace Completed
 		private List<Enemy> enemies;							//List of all Enemy units, used to issue them move commands.
 		private bool enemiesMoving;								//Boolean to check if enemies are moving.
 		private bool doingSetup = true;							//Boolean to check if we're setting up board, prevent Player from moving during setup.
+		public static GameManager instance;
 		
-		
+
 		
 		//Awake is always called before any Start functions
 		void Awake()
 		{
 			//Check if instance already exists
-//			if (instance == null)
-//				
-//				//if not, set instance to this
-//				instance = this;
+			if (instance == null)
+				
+				//if not, set instance to this
+				instance = this;
 //			
 //			//If instance already exists and it's not this:
-//			else if (instance != this)
-//				
-//				//Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
-//				Destroy(gameObject);	
+			else if (instance != this)
+				
+				//Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
+				Destroy(gameObject);	
 			
 			//Sets this to not be destroyed when reloading scene
 			DontDestroyOnLoad(gameObject);
@@ -49,12 +50,16 @@ namespace Completed
 			//Call the InitGame function to initialize the first level 
 			InitGame();
 		}
-		
+
+		public void SetLevel (int index) {
+			level = index; 
+			Debug.Log ("NEXT LEVEL" + index);
+		}
+
 		//This is called each time a scene is loaded.
 		void OnLevelWasLoaded(int index)
 		{
 			//Add one to our level number.
-			level++;
 			//Call InitGame to initialize our level.
 			InitGame();
 		}

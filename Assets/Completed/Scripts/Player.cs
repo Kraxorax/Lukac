@@ -59,11 +59,17 @@ namespace Completed
 		}
 
 		bool colided  = false; 
-		Vector3 imp;
+		float imp;
 		void OnCollisionEnter(Collision coll)
 		{
-			if (coll.gameObject.tag == "zem") {
+			string tag = coll.gameObject.tag;
+			if (tag == "zem") {
 				colided = true; 
+				imp = coll.impulse.magnitude;
+			} else if (coll.gameObject.GetComponent<levelident>()) { 
+				int lvl = coll.gameObject.GetComponent<levelident> ().level;
+				GameManager.instance.SetLevel (lvl);
+
 			} else { 
 				wawesBelow.Add (coll.gameObject.GetComponent<Wawe> ());
 			}
@@ -89,8 +95,6 @@ namespace Completed
 		{
 			Vector2 f = getForce();
 			Vector3 f3 = new Vector3(f.x, f.y, 0);
-			transform.position += f3 / 100;
-			transform.Rotate(f3/30);
 
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition); 
 			Vector2 dot = new Vector2(ray.origin.x, ray.origin.y);
@@ -101,11 +105,14 @@ namespace Completed
 
 			float dest = Vector2.Angle(Vector2.up, odBroda.normalized);
 
+			Vector3 wavevec = f3 / 100;
 			Vector3 mgola = new Vector3 (odBroda.normalized.x / slow, odBroda.normalized.y / slow, 0);
 
-
 			if (colided) {
-				mgola *= -2;
+				mgola *= -6;
+			} else {
+				transform.Rotate (f3 / 30);
+				mgola += wavevec;
 			}
 
 
