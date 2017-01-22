@@ -98,7 +98,7 @@ namespace Completed
 			float dest = Vector2.Angle(transform.up.normalized, odBroda.normalized);
 
 
-			transform.position += new Vector3 (odBroda.normalized.x / 50, odBroda.normalized.y / 50, 0);
+			transform.position += new Vector3 (odBroda.normalized.x / 10, odBroda.normalized.y / 10, 0);
 
 			if (dest < 7.0f) {
 				//				Debug.Log ("To je mali ugao"); 
