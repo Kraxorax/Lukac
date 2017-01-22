@@ -12,14 +12,6 @@ namespace Completed
 		public int pointsPerSoda = 20;				//Number of points to add to player food points when picking up a soda object.
 		public int wallDamage = 1;					//How much damage a player does to a wall when chopping it.
 		public Text foodText;						//UI Text to display current player food total.
-		public AudioClip moveSound1;				//1 of 2 Audio clips to play when player moves.
-		public AudioClip moveSound2;				//2 of 2 Audio clips to play when player moves.
-		public AudioClip eatSound1;					//1 of 2 Audio clips to play when player collects a food object.
-		public AudioClip eatSound2;					//2 of 2 Audio clips to play when player collects a food object.
-		public AudioClip drinkSound1;				//1 of 2 Audio clips to play when player collects a soda object.
-		public AudioClip drinkSound2;				//2 of 2 Audio clips to play when player collects a soda object.
-		public AudioClip gameOverSound;				//Audio clip to play when player dies.
-		
 		private Animator animator;					//Used to store a reference to the Player's animator component.
 		private int food;							//Used to store player food points total during level.
 		private Vector2 touchOrigin = -Vector2.one; //Used to store location of screen touch origin for mobile controls.
@@ -32,6 +24,7 @@ namespace Completed
 		{
 			//Get a component reference to the Player's animator component
 			animator = GetComponent<Animator>();
+			rb = GetComponent<Rigidbody>();
 
 			wawesBelow = new ArrayList();
 
@@ -41,8 +34,7 @@ namespace Completed
 			food = 0;
 			
 			//Set the foodText to reflect the current player food total.
-			foodText.text = "Food: " + food;
-			
+
 			//Call the Start function of the MovingObject base class.
 			base.Start ();
 		}
@@ -95,38 +87,49 @@ namespace Completed
 			transform.position += f3 / 100;
 			//transform.Rotate(f3/30);
 
-			
-
 			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition); 
 			Vector2 dot = new Vector2(ray.origin.x, ray.origin.y);
 
-			Vector2 odBroda = new Vector2(transform.position.x, transform.position.y) - dot;
+			Vector2 odBroda = dot - new Vector2(transform.position.x, transform.position.y) ;
 
-			
+			Vector2 anch = new Vector2(transform.rotation.x, transform.rotation.y);
 
+			float dest = Vector2.Angle(transform.up.normalized, odBroda.normalized);
 
-			Vector2 anch = new Vector2(transform.rotation.x, transform.rotation.y); 
-			float dest = Vector2.Angle(odBroda.normalized, transform.forward) * Time.deltaTime;
+			Vector2 kaM = new Vector2(transform.up.normalized.x, transform.up.normalized.y) - odBroda.normalized;
 
-			float a1 = Vector2.Angle(Vector2.left, odBroda.normalized);
-			float a2 = Vector2.Angle(Vector2.left, transform.forward.normalized);
+			bool lor = isLeft (transform.position, transform.up, odBroda);
 
-			Vector2 kaM = new Vector2(transform.forward.normalized.x, transform.forward.normalized.y) - odBroda.normalized;
+			transform.position += new Vector3 (odBroda.normalized.x / 50, odBroda.normalized.y / 50, 0);
+			//			Debug.Log ("dest " + dest);
+			if (dest < 10.0f) {
+				//				Debug.Log ("To je mali ugao"); 
+			} else if (dest > 170.0f) {
+				//				Debug.Log ("OVo je preveliki ugao"); 
+			} else {
+				float posOrNeg = 1;
+				if (lor && dest > 89.9f) { 
+					Debug.Log ("to the left, to the left");
+					posOrNeg = -1;
+				} else {
+//					Debug.Log ("dont be so lazy");
+				}
+				float smooth = 2.0f;
+				Vector3 eu = transform.rotation.eulerAngles;
+//				Debug.Log (transform.up);
+				Quaternion target = Quaternion.Euler (eu.x, 0, eu.z + 20 * posOrNeg); 
+				transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * smooth);
+			};
+//			transform.LookAt (new Vector3(odBroda.x, odBroda.y, transform.position.z) + transform.position);
+		}
 
-			float posOrNeg = isLeft (transform.position, transform.forward, odBroda) ? 1 : -1 ;
+		public Vector3 eulerAngleVelocity;
+		public Rigidbody rb;
 
+		public float angleOfAngle(float ang) {
+			return ang;
 
-			transform.position -= new Vector3 (odBroda.normalized.x / 50, odBroda.normalized.y / 50, 0);
-
-			transform.Rotate(f3/30);
-
-			var tp = new Vector3(transform.position.x, transform.position.y, 0);
-			var lookPos = new Vector3(dot.x, dot.y, 0) - tp;
-			lookPos.z = 0;
-			var rotation = Quaternion.LookRotation(odBroda);
-			transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 1);
-
-		}	
+		}
 
 		public bool isLeft(Vector2 a, Vector2 b, Vector2 c){
 			return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0;
@@ -180,47 +183,6 @@ namespace Completed
 		//OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).
 		private void OnTriggerEnter2D (Collider2D other)
 		{
-			//Check if the tag of the trigger collided with is Exit.
-			if(other.tag == "Exit")
-			{
-				//Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
-				Invoke ("Restart", restartLevelDelay);
-				
-				//Disable the player object since level is over.
-				enabled = false;
-			}
-			
-			//Check if the tag of the trigger collided with is Food.
-			else if(other.tag == "Food")
-			{
-				//Add pointsPerFood to the players current food total.
-				food += pointsPerFood;
-				
-				//Update foodText to represent current total and notify player that they gained points
-				foodText.text = "+" + pointsPerFood + " Food: " + food;
-				
-				//Call the RandomizeSfx function of SoundManager and pass in two eating sounds to choose between to play the eating sound effect.
-				SoundManager.instance.RandomizeSfx (eatSound1, eatSound2);
-				
-				//Disable the food object the player collided with.
-				other.gameObject.SetActive (false);
-			}
-			
-			//Check if the tag of the trigger collided with is Soda.
-			else if(other.tag == "Soda")
-			{
-				//Add pointsPerSoda to players food points total
-				food += pointsPerSoda;
-				
-				//Update foodText to represent current total and notify player that they gained points
-				foodText.text = "+" + pointsPerSoda + " Food: " + food;
-				
-				//Call the RandomizeSfx function of SoundManager and pass in two drinking sounds to choose between to play the drinking sound effect.
-				SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
-				
-				//Disable the soda object the player collided with.
-				other.gameObject.SetActive (false);
-			}
 		}
 		
 		
@@ -257,13 +219,13 @@ namespace Completed
 			if (food <= 0) 
 			{
 				//Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
-				SoundManager.instance.PlaySingle (gameOverSound);
-				
-				//Stop the background music.
-				SoundManager.instance.musicSource.Stop();
-				
-				//Call the GameOver function of GameManager.
-				GameManager.instance.GameOver ();
+//				SoundManager.instance.PlaySingle (gameOverSound);
+//				
+//				//Stop the background music.
+//				SoundManager.instance.musicSource.Stop();
+//				
+//				//Call the GameOver function of GameManager.
+//				GameManager.instance.GameOver ();
 			}
 		}
 	}
