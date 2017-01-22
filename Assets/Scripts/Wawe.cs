@@ -11,7 +11,7 @@ public class Wawe : MonoBehaviour {
 	private float _angle;
 	private Vector2 _offset;
 
-	public Vector2 StrongDirection = new Vector2(0, 0);
+	public Vector2 StrongDirection;
 
 	public float MRotateSpeed = 1f;
 	public int MRotateLimit = 30;
@@ -24,6 +24,10 @@ public class Wawe : MonoBehaviour {
 	void Start () {
 		_centre = transform.position;
 		_srend = gameObject.GetComponent<SpriteRenderer>();
+
+		float n = Random.Range(1, 101);
+		n = n / 100;
+		StrongDirection = new Vector2(n, 1 - n);
 	}
 
 	
